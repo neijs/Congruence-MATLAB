@@ -8,6 +8,6 @@ for x = 0:6
                 sum = sum + 1;
             end
         end
-    end
+    end 
 end
 disp(sum);

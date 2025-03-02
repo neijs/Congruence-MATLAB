@@ -1,12 +1,7 @@
-function [A, Super, M] = SN_decomposition(A)
-    if det(A) ~= 0
-        Super = sym(eye(length(A)));
-        return;
-    end
+function [A, Super] = SN_decomposition(A)
     dimA = length(A);
-    decomposition_info(A);
     iter = 1;
-    m = zeros(1, 2*length(A));
+    m = zeros(1, 2*dimA);
     [A, Super, m(1), m(2)] = Lemma3(A);
     rho = rho_i(iter, m, dimA);
     [A, Super] = Lemma4(A, Super, rho, m(1), m(2));
@@ -16,9 +11,9 @@ function [A, Super, M] = SN_decomposition(A)
         iter = iter + 1;
     end
     m = m(:, 1:2*iter);
-    disp("displaying m from sn");
     disp(m);
-    M = construct_M(m(:, 1:2*iter));
-    disp("displaying M from sn");
-    disp(M);
+    Sm = NtoM(m);
+    addit_super = sym(blkdiag(eye(dimA - sum(m)), Sm));
+    A = addit_super * A * addit_super';
+    Super = addit_super*Super;
 end
